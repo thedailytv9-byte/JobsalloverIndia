@@ -1,0 +1,203 @@
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaukriConnect | Find & Post Jobs in India</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900">
+
+    <nav class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold tracking-tight">Naukri<span class="text-indigo-200">Connect</span></a>
+            <div class="space-x-4">
+                <a href="#jobs-section" class="hover:text-indigo-200 transition">Find Jobs</a>
+                <a href="#post-section" class="bg-white text-indigo-600 px-4 py-2 rounded-md font-semibold hover:bg-indigo-50 transition">Post a Job</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-indigo-900 text-white py-16 px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Discover Your Next Career Move in India</h1>
+        <p class="text-xl text-indigo-200 max-w-2xl mx-auto">Connecting India's brightest talent with top-tier companies. Explore thousands of opportunities today.</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <section id="post-section" class="lg:col-span-1 bg-white p-6 rounded-lg shadow-md h-fit sticky top-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Post a New Job</h2>
+            <form id="jobForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Job Title</label>
+                    <input type="text" id="jobTitle" required placeholder="e.g., Full Stack Developer" class="mt-1 w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Company Name</label>
+                    <input type="text" id="company" required placeholder="e.g., TechMahindra, Infosys" class="mt-1 w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Location (India)</label>
+                    <select id="location" class="mt-1 w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <option value="Bengaluru">Bengaluru, KA</option>
+                        <option value="Mumbai">Mumbai, MH</option>
+                        <option value="Delhi NCR">Delhi NCR</option>
+                        <option value="Hyderabad">Hyderabad, TS</option>
+                        <option value="Pune">Pune, MH</option>
+                        <option value="Remote">Remote (India)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Salary Range (₹ LPA)</label>
+                    <input type="text" id="salary" required placeholder="e.g., 6 - 12 LPA" class="mt-1 w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Job Description</label>
+                    <textarea id="description" rows="3" required placeholder="Describe the role and requirements..." class="mt-1 w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 text-white p-2.5 rounded-md font-semibold hover:bg-indigo-700 transition shadow">Publish Job</button>
+            </form>
+        </section>
+
+        <section id="jobs-section" class="lg:col-span-2 space-y-6">
+            
+            <div class="bg-white p-4 rounded-lg shadow-md flex flex-col md:flex-row gap-4 items-center justify-between">
+                <input type="text" id="searchInput" placeholder="Search by title, company..." class="w-full md:w-2/3 p-2 border rounded-md outline-none focus:ring-2 focus:ring-indigo-500">
+                <span class="text-sm text-gray-500 font-medium" id="jobCount">Showing 3 jobs</span>
+            </div>
+
+            <div id="listingsContainer" class="space-y-4">
+                </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center mt-20 border-t border-gray-700">
+        <p>&copy; 2026 NaukriConnect India. Built for Indian Developers and Recruiters.</p>
+    </footer>
+
+    <script>
+        // Initial Mock Data representative of the Indian market
+        let jobs = [
+            {
+                id: 1,
+                title: "Frontend Engineer (React)",
+                company: "Razorpay",
+                location: "Bengaluru",
+                salary: "14 - 22 LPA",
+                description: "Looking for a Frontend Engineer with 3+ years of experience in ReactJS, TailwindCSS, and state management tools. Experience with payment gateways is a plus."
+            },
+            {
+                id: 2,
+                title: "Data Analyst",
+                company: "TCS",
+                location: "Mumbai",
+                salary: "5 - 8 LPA",
+                description: "Required strong skills in SQL, Python, and PowerBI. The ideal candidate will analyze market trends and generate monthly business reports."
+            },
+            {
+                id: 3,
+                title: "DevOps Specialist",
+                company: "Wipro",
+                location: "Remote",
+                salary: "12 - 18 LPA",
+                description: "Manage AWS infrastructure, CI/CD pipelines via Jenkins, and Docker orchestration. Full-time remote position open anywhere across India."
+            }
+        ];
+
+        const listingsContainer = document.getElementById('listingsContainer');
+        const jobForm = document.getElementById('jobForm');
+        const searchInput = document.getElementById('searchInput');
+        const jobCount = document.getElementById('jobCount');
+
+        // Function to render jobs on screen
+        function displayJobs(jobsToRender) {
+            listingsContainer.innerHTML = '';
+            jobCount.textContent = `Showing ${jobsToRender.length} job(s)`;
+
+            if(jobsToRender.length === 0) {
+                listingsContainer.innerHTML = `
+                    <div class="bg-white p-8 rounded-lg shadow-md text-center text-gray-500">
+                        No jobs found matching your criteria. Try another search!
+                    </div>`;
+                return;
+            }
+
+            jobsToRender.forEach(job => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-6 rounded-lg shadow-md border-l-4 border-indigo-600 hover:shadow-lg transition flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-indigo-900">${job.title}</h3>
+                            <span class="bg-indigo-50 text-indigo-700 text-xs px-2.5 py-1 rounded-full font-semibold border border-indigo-200">${job.location}</span>
+                        </div>
+                        <p class="text-gray-700 font-medium mb-2">${job.company}</p>
+                        <p class="text-green-700 font-semibold text-sm mb-3">💰 ₹ ${job.salary}</p>
+                        <p class="text-gray-600 text-sm leading-relaxed">${job.description}</p>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+                        <button onclick="alert('Application successful for ${job.title} at ${job.company}!')" class="bg-gray-900 text-white px-4 py-2 rounded text-sm font-semibold hover:bg-gray-800 transition">Apply Now</button>
+                    </div>
+                `;
+                listingsContainer.appendChild(card);
+            });
+        }
+
+        // Handle Job Submission Form
+        jobForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Stop page from refreshing
+
+            // Gather values
+            const title = document.getElementById('jobTitle').value;
+            const company = document.getElementById('company').value;
+            const location = document.getElementById('location').value;
+            const salary = document.getElementById('salary').value;
+            const description = document.getElementById('description').value;
+
+            // Create new job object
+            const newJob = {
+                id: Date.now(), // Unique temporary ID
+                title,
+                company,
+                location,
+                salary,
+                description
+            };
+
+            // Prepend new job to the top of our array
+            jobs.unshift(newJob);
+
+            // Re-render updated job list
+            displayJobs(jobs);
+
+            // Reset form inputs and give feedback
+            jobForm.reset();
+            alert('🎉 Success! Your job post has been added to the board.');
+        });
+
+        // Handle Live Search functionality
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredJobs = jobs.filter(job => 
+                job.title.toLowerCase().includes(searchTerm) || 
+                job.company.toLowerCase().includes(searchTerm) ||
+                job.location.toLowerCase().includes(searchTerm)
+            );
+            displayJobs(filteredJobs);
+        });
+
+        // Initial launch render
+        displayJobs(jobs);
+    </script>
+</body>
+</html>
+Next Steps for Production
+Because this code runs entirely in the browser (frontend), any jobs you upload via the form will disappear if you refresh the page. To turn this into a real, fully functioning business software platform, you will eventually want to connect it to a backend tech stack:
+
+Database: MongoDB or PostgreSQL to permanently store user data and job posts.
+
+Backend Framework: Node.js (Express) or Python (Django/FastAPI) to handle user accounts, authentication, and routing.
+
+Hosting: Vercel/Netlify for the frontend code, and AWS or Render for your database and servers.
