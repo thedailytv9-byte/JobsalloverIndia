@@ -16,7 +16,6 @@
 
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
-            /* Using a beautiful default office background overlay */
             background-image: linear-gradient(rgba(243, 244, 246, 0.85), rgba(243, 244, 246, 0.9)), url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -112,6 +111,13 @@
             font-weight: bold;
         }
 
+        .loading {
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+            padding: 20px;
+        }
+
         @media (max-width: 768px) {
             .container { grid-template-columns: 1fr; }
         }
@@ -136,21 +142,10 @@
             <div class="card">
                 <h2 class="lang-pa">ਤਾਜ਼ਾ ਨੌਕਰੀਆਂ</h2>
                 <h2 class="lang-en">Latest Jobs</h2>
-
-                <div class="job-card">
-                    <h3 class="lang-pa">ਸੁਰੱਖਿਆ ਗਾਰਡ</h3>
-                    <h3 class="lang-en">Security Guard</h3>
-                    <p style="color: var(--text-light)">📍 G4S Punjab</p>
-                    <a href="https://in.indeed.com/" target="_blank" class="btn lang-pa">ਅਪਲਾਈ ਕਰੋ</a>
-                    <a href="https://in.indeed.com/" target="_blank" class="btn lang-en">Apply Now</a>
-                </div>
-
-                <div class="job-card">
-                    <h3 class="lang-pa">ਟੈਲੀਕਾਲਰ</h3>
-                    <h3 class="lang-en">Telecaller</h3>
-                    <p style="color: var(--text-light)">📍 Mohali BPO</p>
-                    <a href="https://in.indeed.com/" target="_blank" class="btn lang-pa">ਅਪਲਾਈ ਕਰੋ</a>
-                    <a href="https://in.indeed.com/" target="_blank" class="btn lang-en">Apply Now</a>
+                
+                <div id="job-container">
+                    <p class="loading lang-en">Loading latest jobs...</p>
+                    <p class="loading lang-pa">ਤਾਜ਼ਾ ਨੌਕਰੀਆਂ ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ...</p>
                 </div>
             </div>
         </main>
@@ -161,7 +156,7 @@
                 <h3 class="lang-en">Admin Panel (Private)</h3>
                 <p class="lang-pa">*ਸਿਰਫ਼ ਵੈੱਬਸਾਈਟ ਦੇ ਮਾਲਕ ਲਈ।</p>
                 <p class="lang-en">*For website owner use only.</p>
-                <button onclick="adminLogin()" class="btn-admin">+ ਨਵੀਂ ਨੌਕਰੀ ਜੋੜੋ</button>
+                <button onclick="addNewJob()" class="btn-admin">+ <span class="lang-pa">ਨਵੀਂ ਨੌਕਰੀ ਜੋੜੋ</span><span class="lang-en">Add New Job</span></button>
             </div>
 
             <div class="card">
@@ -173,7 +168,66 @@
     </div>
 
     <script>
-        // --- 1. LANGUAGE SWITCHER FUNCTIONALITY ---
+        // --- 1. GOOGLE APPS SCRIPT INTEGRATION ---
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwLu4gqqg_xwPL2-0zKsCbZHK5dXaHi_juUrjS6mMp_AjvQtpRBi5WNApHDcZbTIH1C/exec';
+
+        // Function to fetch jobs from Google Sheets
+        async function fetchJobs() {
+            const jobContainer = document.getElementById('job-container');
+            try {
+                const response = await fetch(scriptURL);
+                const jobs = await response.json(); 
+                
+                jobContainer.innerHTML = ''; // Clear loading text
+
+                if(jobs.length === 0) {
+                    jobContainer.innerHTML = '<p style="text-align:center;">No jobs available at the moment.</p>';
+                    return;
+                }
+
+                jobs.forEach(job => {
+                    // Assuming the API returns objects with these keys. Update them based on your actual Google Sheet headers.
+                    const titlePa = job.titlePa || job.title || 'ਸਿਰਲੇਖ ਉਪਲਬਧ ਨਹੀਂ ਹੈ';
+                    const titleEn = job.titleEn || job.title || 'Title Unavailable';
+                    const location = job.location || 'Punjab';
+                    const link = job.link || '#';
+
+                    const jobHTML = `
+                        <div class="job-card">
+                            <h3 class="lang-pa">${titlePa}</h3>
+                            <h3 class="lang-en">${titleEn}</h3>
+                            <p style="color: var(--text-light)">📍 ${location}</p>
+                            <a href="${link}" target="_blank" class="btn lang-pa">ਅਪਲਾਈ ਕਰੋ</a>
+                            <a href="${link}" target="_blank" class="btn lang-en">Apply Now</a>
+                        </div>
+                    `;
+                    jobContainer.innerHTML += jobHTML;
+                });
+            } catch (error) {
+                console.error('Error fetching jobs:', error);
+                jobContainer.innerHTML = '<p style="color: red; text-align:center;">Error loading jobs. Please try again later.</p>';
+            }
+        }
+
+        // Function to handle adding a new job (Admin only)
+        function addNewJob() {
+            // Note: For a real app, replace this prompt with an HTML form modal.
+            const jobTitle = prompt("Enter Job Title (English):");
+            if(jobTitle) {
+                const formData = new FormData();
+                formData.append('titleEn', jobTitle);
+                // Add more fields here as needed
+                
+                fetch(scriptURL, { method: 'POST', body: formData })
+                    .then(response => {
+                        alert("Job added successfully!");
+                        fetchJobs(); // Reload list
+                    })
+                    .catch(error => console.error('Error!', error.message));
+            }
+        }
+
+        // --- 2. LANGUAGE SWITCHER FUNCTIONALITY ---
         function toggleLang(lang) {
             document.body.classList.remove('lang-en', 'lang-pa');
             document.body.classList.add('lang-' + lang);
@@ -187,8 +241,10 @@
             localStorage.setItem('preferredLang', lang);
         }
 
-        // --- 2. ADMIN PANEL ACCESS CONTROL ---
+        // --- 3. ADMIN PANEL ACCESS CONTROL ---
         function checkAdminStatus() {
+            // Trigger this by calling adminLogin() in the browser console for testing, 
+            // or by adding a hidden login button somewhere.
             const isAdmin = localStorage.getItem('isAdminLoggedIn') === 'true';
             const adminPanel = document.querySelector('.admin-section');
             
@@ -201,7 +257,8 @@
             }
         }
 
-        function adminLogin() {
+        // Make this available globally so you can call it from the browser console to login
+        window.adminLogin = function() {
             const password = prompt("Enter Admin Password:");
             if (password === "admin123") { 
                 alert("Login Successful!");
@@ -210,12 +267,14 @@
             } else {
                 alert("Incorrect password. Access denied.");
             }
-        }
+        };
 
+        // --- 4. INITIALIZE PAGE ---
         window.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('preferredLang') || 'pa';
             toggleLang(savedLang);
             checkAdminStatus();
+            fetchJobs(); // Load the jobs from the Google Script when the page loads
         });
     </script>
 </body>
