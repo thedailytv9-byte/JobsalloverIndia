@@ -1,75 +1,222 @@
-<style>
-    /* Ensure your background image is properly styled and visible */
-    body {
-        /* Replace 'your-image-path.jpg' with your actual image URL or local path */
-        background-image: url('your-image-path.jpg'); 
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        margin: 0;
-        padding: 0;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ਰੁਜ਼ਗਾਰ ਪੰਜਾਬ | Rozgar Punjab</title>
+    <style>
+        :root {
+            --primary-color: #4338ca;
+            --secondary-color: #f3f4f6;
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Simple Language Toggle Visibility Rules */
-    body.lang-en .lang-pa { display: none !important; }
-    body.lang-pa .lang-en { display: none !important; }
-</style>
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            /* Using a beautiful default office background overlay */
+            background-image: linear-gradient(rgba(243, 244, 246, 0.85), rgba(243, 244, 246, 0.9)), url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
 
-<aside class="card admin-section" style="display: none;">
-    <h2 class="lang-pa">ਐਡਮਿਨ ਪੈਨਲ (ਪ੍ਰਾਈਵੇਟ)</h2>
-    <h2 class="lang-en">Admin Panel (Private)</h2>
-    <p class="lang-pa">*ਸਿਰਫ਼ ਵੈੱਬਸਾਈਟ ਦੇ ਮਾਲਕ ਲਈ।</p>
-    <p class="lang-en">*For website owner use only.</p>
-    <button onclick="adminLogin()" class="btn-admin">+ ਨਵੀਂ ਨੌਕਰੀ ਜੋੜੋ</button>
-</aside>
+        body.lang-en .lang-pa { display: none !important; }
+        body.lang-pa .lang-en { display: none !important; }
 
-<script>
-    // --- 1. LANGUAGE SWITCHER FUNCTIONALITY ---
-    function toggleLang(lang) {
-        document.body.classList.remove('lang-en', 'lang-pa');
-        document.body.classList.add('lang-' + lang);
+        header {
+            background: linear-gradient(135deg, rgba(67, 56, 202, 0.95), rgba(49, 46, 129, 0.95));
+            color: var(--white);
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
 
-        // Safely check if language toggle buttons exist before editing classes
-        const btnPa = document.getElementById('btn-pa');
-        const btnEn = document.getElementById('btn-en');
+        header h1 { margin: 0; font-size: 2.5rem; }
         
-        if (btnPa) btnPa.classList.toggle('active', lang === 'pa');
-        if (btnEn) btnEn.classList.toggle('active', lang === 'en');
-        
-        localStorage.setItem('preferredLang', lang);
-    }
+        .lang-switcher { margin-top: 20px; }
 
-    // --- 2. ADMIN PANEL ACCESS CONTROL ---
-    function checkAdminStatus() {
-        const isAdmin = localStorage.getItem('isAdminLoggedIn') === 'true';
-        // Targets the class applied to your admin element container
-        const adminPanel = document.querySelector('.admin-section');
-        
-        if (adminPanel) {
-            if (isAdmin) {
-                adminPanel.style.setProperty('display', 'block', 'important');
-            } else {
-                adminPanel.style.setProperty('display', 'none', 'important');
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: var(--white);
+            padding: 8px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 20px;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: var(--white);
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .job-card {
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .admin-section {
+            background-color: #fee2e2;
+            border: 1px dashed #ef4444;
+        }
+
+        .btn-admin {
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="lang-pa">
+
+    <header>
+        <h1 class="lang-pa">ਰੁਜ਼ਗਾਰ ਪੰਜਾਬ</h1>
+        <p class="lang-pa">ਪੰਜਾਬ ਵਿੱਚ ਤੁਹਾਡਾ ਰੁਜ਼ਗਾਰ ਦਾ ਮੁੱਖ ਸਾਧਨ</p>
+        <h1 class="lang-en">Rozgar Punjab</h1>
+        <p class="lang-en">Your Gateway to Employment in Punjab</p>
+
+        <div class="lang-switcher">
+            <button onclick="toggleLang('pa')" id="btn-pa" class="lang-btn active">ਪੰਜਾਬੀ</button>
+            <button onclick="toggleLang('en')" id="btn-en" class="lang-btn">English</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <div class="card">
+                <h2 class="lang-pa">ਤਾਜ਼ਾ ਨੌਕਰੀਆਂ</h2>
+                <h2 class="lang-en">Latest Jobs</h2>
+
+                <div class="job-card">
+                    <h3 class="lang-pa">ਸੁਰੱਖਿਆ ਗਾਰਡ</h3>
+                    <h3 class="lang-en">Security Guard</h3>
+                    <p style="color: var(--text-light)">📍 G4S Punjab</p>
+                    <a href="https://in.indeed.com/" target="_blank" class="btn lang-pa">ਅਪਲਾਈ ਕਰੋ</a>
+                    <a href="https://in.indeed.com/" target="_blank" class="btn lang-en">Apply Now</a>
+                </div>
+
+                <div class="job-card">
+                    <h3 class="lang-pa">ਟੈਲੀਕਾਲਰ</h3>
+                    <h3 class="lang-en">Telecaller</h3>
+                    <p style="color: var(--text-light)">📍 Mohali BPO</p>
+                    <a href="https://in.indeed.com/" target="_blank" class="btn lang-pa">ਅਪਲਾਈ ਕਰੋ</a>
+                    <a href="https://in.indeed.com/" target="_blank" class="btn lang-en">Apply Now</a>
+                </div>
+            </div>
+        </main>
+
+        <aside>
+            <div class="card admin-section" style="display: none;">
+                <h3 class="lang-pa">ਐਡਮਿਨ ਪੈਨਲ (ਪ੍ਰਾਈਵੇਟ)</h3>
+                <h3 class="lang-en">Admin Panel (Private)</h3>
+                <p class="lang-pa">*ਸਿਰਫ਼ ਵੈੱਬਸਾਈਟ ਦੇ ਮਾਲਕ ਲਈ।</p>
+                <p class="lang-en">*For website owner use only.</p>
+                <button onclick="adminLogin()" class="btn-admin">+ ਨਵੀਂ ਨੌਕਰੀ ਜੋੜੋ</button>
+            </div>
+
+            <div class="card">
+                <h2 class="lang-pa">ਸੰਪਰਕ ਕਰੋ</h2>
+                <h2 class="lang-en">Contact Us</h2>
+                <p>Email: <a href="mailto:support@naukriconnect.in" style="color: var(--primary-color); font-weight: bold;">support@naukriconnect.in</a></p>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // --- 1. LANGUAGE SWITCHER FUNCTIONALITY ---
+        function toggleLang(lang) {
+            document.body.classList.remove('lang-en', 'lang-pa');
+            document.body.classList.add('lang-' + lang);
+
+            const btnPa = document.getElementById('btn-pa');
+            const btnEn = document.getElementById('btn-en');
+            
+            if (btnPa) btnPa.classList.toggle('active', lang === 'pa');
+            if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+            
+            localStorage.setItem('preferredLang', lang);
+        }
+
+        // --- 2. ADMIN PANEL ACCESS CONTROL ---
+        function checkAdminStatus() {
+            const isAdmin = localStorage.getItem('isAdminLoggedIn') === 'true';
+            const adminPanel = document.querySelector('.admin-section');
+            
+            if (adminPanel) {
+                if (isAdmin) {
+                    adminPanel.style.setProperty('display', 'block', 'important');
+                } else {
+                    adminPanel.style.setProperty('display', 'none', 'important');
+                }
             }
         }
-    }
 
-    function adminLogin() {
-        const password = prompt("Enter Admin Password:");
-        if (password === "admin123") { 
-            alert("Login Successful!");
-            localStorage.setItem('isAdminLoggedIn', 'true');
-            checkAdminStatus();
-        } else {
-            alert("Incorrect password. Access denied.");
+        function adminLogin() {
+            const password = prompt("Enter Admin Password:");
+            if (password === "admin123") { 
+                alert("Login Successful!");
+                localStorage.setItem('isAdminLoggedIn', 'true');
+                checkAdminStatus();
+            } else {
+                alert("Incorrect password. Access denied.");
+            }
         }
-    }
 
-    // Single source of initialization when the page loads
-    window.addEventListener('DOMContentLoaded', () => {
-        const savedLang = localStorage.getItem('preferredLang') || 'pa';
-        toggleLang(savedLang);
-        checkAdminStatus();
-    });
-</script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('preferredLang') || 'pa';
+            toggleLang(savedLang);
+            checkAdminStatus();
+        });
+    </script>
+</body>
+</html>
