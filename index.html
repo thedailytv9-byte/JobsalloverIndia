@@ -168,103 +168,74 @@
     </div>
 
     <script>
-        // --- 1. GOOGLE APPS SCRIPT INTEGRATION ---
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwLu4gqqg_xwPL2-0zKsCbZHK5dXaHi_juUrjS6mMp_AjvQtpRBi5WNApHDcZbTIH1C/exec';
+    // 1. UPDATE THIS WITH YOUR NEW DEPLOYMENT URL
+    const scriptURL = 'YOUR_NEW_DEPLOYED_URL_HERE'; 
 
-        // Function to fetch jobs from Google Sheets
-        async function fetchJobs() {
-            const jobContainer = document.getElementById('job-container');
-            try {
-                const response = await fetch(scriptURL);
-                const jobs = await response.json(); 
-                
-                jobContainer.innerHTML = ''; // Clear loading text
-
-                if(jobs.length === 0) {
-                    jobContainer.innerHTML = '<p style="text-align:center;">No jobs available at the moment.</p>';
-                    return;
-                }
-
-                jobs.forEach(job => {
-                    // Assuming the API returns objects with these keys. Update them based on your actual Google Sheet headers.
-                    const titlePa = job.titlePa || job.title || 'ਸਿਰਲੇਖ ਉਪਲਬਧ ਨਹੀਂ ਹੈ';
-                    const titleEn = job.titleEn || job.title || 'Title Unavailable';
-                    const location = job.location || 'Punjab';
-                    const link = job.link || '#';
-
-                    const jobHTML = `
-                        <div class="job-card">
-                            <h3 class="lang-pa">${titlePa}</h3>
-                            <h3 class="lang-en">${titleEn}</h3>
-                            <p style="color: var(--text-light)">📍 ${location}</p>
-                            <a href="${link}" target="_blank" class="btn lang-pa">ਅਪਲਾਈ ਕਰੋ</a>
-                            <a href="${link}" target="_blank" class="btn lang-en">Apply Now</a>
-                        </div>
-                    `;
-                    jobContainer.innerHTML += jobHTML;
-                });
-            } catch (error) {
-                console.error('Error fetching jobs:', error);
-                jobContainer.innerHTML = '<p style="color: red; text-align:center;">Error loading jobs. Please try again later.</p>';
-            }
-        }
-
-        // Function to handle adding a new job (Admin only)
-        function addNewJob() {
-            // Note: For a real app, replace this prompt with an HTML form modal.
-            const jobTitle = prompt("Enter Job Title (English):");
-            if(jobTitle) {
-                const formData = new FormData();
-                formData.append('titleEn', jobTitle);
-                // Add more fields here as needed
-                
-                fetch(scriptURL, { method: 'POST', body: formData })
-                    .then(response => {
-                        alert("Job added successfully!");
-                        fetchJobs(); // Reload list
-                    })
-                    .catch(error => console.error('Error!', error.message));
-            }
-        }
-
-        // --- 2. LANGUAGE SWITCHER FUNCTIONALITY ---
-        function toggleLang(lang) {
-            document.body.classList.remove('lang-en', 'lang-pa');
-            document.body.classList.add('lang-' + lang);
-
-            const btnPa = document.getElementById('btn-pa');
-            const btnEn = document.getElementById('btn-en');
-            
-            if (btnPa) btnPa.classList.toggle('active', lang === 'pa');
-            if (btnEn) btnEn.classList.toggle('active', lang === 'en');
-            
-            localStorage.setItem('preferredLang', lang);
-        }
-
-        // --- 3. ADMIN PANEL ACCESS CONTROL ---
-        function checkAdminStatus() {
-            // Trigger this by calling adminLogin() in the browser console for testing, 
-            // or by adding a hidden login button somewhere.
+    async function fetchJobs() {
+        const jobContainer = document.getElementById('job-container');
+        jobContainer.innerHTML = '<p class="loading">Loading...</p>';
+        try {
+            const response = await fetch(scriptURL);
+            const jobs = await response.json();
+            jobContainer.innerHTML = '';
             const isAdmin = localStorage.getItem('isAdminLoggedIn') === 'true';
-            const adminPanel = document.querySelector('.admin-section');
-            
-            if (adminPanel) {
-                if (isAdmin) {
-                    adminPanel.style.setProperty('display', 'block', 'important');
-                } else {
-                    adminPanel.style.setProperty('display', 'none', 'important');
-                }
-            }
-        }
 
-        // Make this available globally so you can call it from the browser console to login
-        window.adminLogin = function() {
-            const password = prompt("Enter Admin Password:");
-            if (password === "admin123") { 
-                alert("Login Successful!");
-                localStorage.setItem('isAdminLoggedIn', 'true');
-                checkAdminStatus();
-            } else {
+            jobs.forEach(job => {
+                const deleteBtn = isAdmin ? `<button onclick="deleteJob('${job.link}')" style="background:#dc2626; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-top:10px;">Delete</button>` : '';
+                jobContainer.innerHTML += `
+                    <div class="job-card">
+                        <h3 class="lang-pa">${job.titlePa || 'N/A'}</h3>
+                        <h3 class="lang-en">${job.titleEn || 'N/A'}</h3>
+                        <p>📍 ${job.company || 'Punjab'}</p>
+                        <a href="${job.link}" target="_blank" class="btn">Apply Now</a>
+                        ${deleteBtn}
+                    </div>`;
+            });
+        } catch (e) { jobContainer.innerHTML = '<p>Error loading jobs.</p>'; }
+    }
+
+    async function addNewJob() {
+        const titlePa = prompt("Enter Title (Punjabi):");
+        const titleEn = prompt("Enter Title (English):");
+        const company = prompt("Enter Company:");
+        const link = prompt("Enter Job Link:");
+        
+        if (titleEn && link) {
+            await fetch(scriptURL, { 
+                method: 'POST', 
+                body: JSON.stringify({ titlePa, titleEn, company, link }) 
+            });
+            alert("Job added successfully!");
+            fetchJobs();
+        }
+    }
+
+    async function deleteJob(link) {
+        if(confirm("Are you sure you want to delete this job?")) {
+            await fetch(scriptURL, { 
+                method: "POST", 
+                body: JSON.stringify({ action: "delete", link: link }) 
+            });
+            fetchJobs();
+        }
+    }
+
+    window.adminLogin = function() {
+        if (prompt("Password:") === "admin123") {
+            localStorage.setItem('isAdminLoggedIn', 'true');
+            location.reload();
+        } else {
+            alert("Access Denied");
+        }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+            document.querySelector('.admin-section').style.display = 'block';
+        }
+        fetchJobs();
+    });
+</script>
                 alert("Incorrect password. Access denied.");
             }
         };
