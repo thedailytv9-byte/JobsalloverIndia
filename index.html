@@ -1,46 +1,241 @@
 <!DOCTYPE html>
-<html lang="pa">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ਰੁਜ਼ਗਾਰ ਪੰਜਾਬ | Rozgar Punjab</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Modern CSS Variables for Styling */
+        :root {
+            --primary-color: #4338ca; /* Indigo */
+            --secondary-color: #f3f4f6;
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Language Visibility System */
+        body.lang-en .lang-pa { display: none !important; }
+        body.lang-pa .lang-en { display: none !important; }
+
+        /* Professional Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #312e81);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        /* Language Toggle Buttons */
+        .lang-switcher {
+            margin-top: 15px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid transparent;
+            color: var(--white);
+            padding: 6px 16px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 20px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--white);
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            color: var(--white);
+        }
+        .lang-btn.active:hover {
+            background: var(--white);
+            color: var(--primary-color);
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        /* Card Styling for Sections */
+        .card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        h2, h3 {
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        /* Job Listings */
+        .job-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+
+        .job-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+        }
+
+        .company-name {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #3730a3;
+        }
+
+        /* Admin Section (Only for you) */
+        .admin-section {
+            background-color: #fee2e2;
+            border: 1px dashed #ef4444;
+        }
+        .admin-section h3 {
+            color: #b91c1c;
+            border-bottom-color: #fca5a5;
+        }
+        .btn-admin {
+            background-color: #dc2626;
+        }
+        .btn-admin:hover { background-color: #b91c1c; }
+
+        /* Modern Contact/Feedback Form */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .form-group textarea { resize: vertical; height: 100px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-900">
-    <nav class="bg-indigo-700 text-white p-4 flex justify-between items-center shadow-md">
-        <h1 class="text-xl font-bold">ਰੁਜ਼ਗਾਰ ਪੰਜਾਬ | Rozgar Punjab</h1>
-    </nav>
+<body class="lang-pa"> <header>
+        <h1 class="lang-pa">ਰੁਜ਼ਗਾਰ ਪੰਜਾਬ</h1>
+        <p class="lang-pa">ਪੰਜਾਬ ਵਿੱਚ ਤੁਹਾਡਾ ਰੁਜ਼ਗਾਰ ਦਾ ਮੁੱਖ ਸਾਧਨ</p>
+        
+        <h1 class="lang-en">Rozgar Punjab</h1>
+        <p class="lang-en">Your Gateway to Employment in Punjab</p>
 
-    <main class="max-w-4xl mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <aside class="md:col-span-1">
-            <section class="bg-white p-4 rounded shadow">
-                <h2 class="font-bold mb-2">Contact / ਸੰਪਰਕ</h2>
-                <a href="mailto:support@naukriconnect.in" class="text-indigo-600 underline">support@naukriconnect.in</a>
-            </section>
-        </aside>
+        <div class="lang-switcher">
+            <button onclick="toggleLang('pa')" id="btn-pa" class="lang-btn active">ਪੰਜਾਬੀ</button>
+            <button onclick="toggleLang('en')" id="btn-en" class="lang-btn">English</button>
+        </div>
+    </header>
 
-        <section class="md:col-span-2">
-            <h2 class="text-2xl font-bold mb-4">Latest Jobs / ਤਾਜ਼ਾ ਨੌਕਰੀਆਂ</h2>
-            <div id="jobList" class="space-y-4">
+    <div class="container">
+        <main>
+            <div class="card">
+                <h2 class="lang-pa">ਤਾਜ਼ਾ ਨੌਕਰੀਆਂ</h2>
+                <h2 class="lang-en">Latest Jobs</h2>
+
+                <div class="job-card">
+                    <p class="job-title lang-pa">ਸੁਰੱਖਿਆ ਗਾਰਡ</p>
+                    <p class="job-title lang-en">Security Guard</p>
+                    <div class="company-name">📍 G4S Punjab</div>
+                    <a href="#" class="btn lang-pa">ਅਪਲਾਈ ਕਰੋ</a>
+                    <a href="#" class="btn lang-en">Apply Now</a>
                 </div>
-        </section>
-    </main>
 
-    <script>
-        // ADD JOBS HERE: Only you can edit this list
-        const jobs = [
-            { title: "Security Guard (ਸੁਰੱਖਿਆ ਗਾਰਡ)", company: "G4S Punjab", link: "https://in.indeed.com/" },
-            { title: "Telecaller (ਟੈਲੀਕਾਲਰ)", company: "Mohali BPO", link: "https://in.indeed.com/" }
-        ];
+                <div class="job-card">
+                    <p class="job-title lang-pa">ਟੈਲੀਕਾਲਰ</p>
+                    <p class="job-title lang-en">Telecaller</p>
+                    <div class="company-name">📍 Mohali BPO</div>
+                    <a href="#" class="btn lang-pa">ਅਪਲਾਈ ਕਰੋ</a>
+                    <a href="#" class="btn lang-en">Apply Now</a>
+                </div>
+            </div>
+        </main>
 
-        const container = document.getElementById('jobList');
-        jobs.forEach(job => {
-            container.innerHTML += `
-                <div class="bg-white p-4 rounded shadow border-l-4 border-indigo-600">
-                    <h3 class="font-bold">${job.title}</h3>
-                    <p class="text-sm text-gray-600">${job.company}</p>
-                    <a href="${job.link}" target="_blank" class="text-indigo-600 font-semibold">Apply / ਅਪਲਾਈ ਕਰੋ</a>
-                </div>`;
-        });
-    </script>
-</body>
-</html>
+        <aside>
+            <div class="card admin-section">
+                <h3 class="lang-pa">ਐਡਮਿਨ ਪੈਨਲ (ਪ੍ਰਾਈਵੇਟ)</h3>
+                <h3 class="lang-en">Admin Panel (Private)</h3>
+                
+                <p class="lang-pa" style="font-size: 0.9em; color: #7f1d1d;">*ਸਿਰਫ਼ ਵੈੱਬਸਾਈਟ ਦੇ ਮਾਲਕ ਲਈ।</p>
+                <p class="lang-en" style="font-size: 0.9em; color: #7f1d1d;">*Only visible/usable by site owner.</p>
+                
+                <button class="btn btn-admin lang-pa" onclick="adminLogin()">+ ਨਵੀਂ ਨੌਕਰੀ ਜੋੜੋ</button>
+                <button class="btn btn-admin lang-en" onclick="adminLogin()">+ Add New Job</button>
+            </div>
+
+            <div class="card">
+                <h2 class="lang-pa">ਸੰਪਰਕ ਅਤੇ ਫੀਡਬੈਕ</h2>
+                <h2 class="lang-en">Contact & Feedback</h2>
+                
+                <p class="lang-pa">ਕੋਈ ਸਵਾਲ ਹੈ? ਸਾਡੇ ਨਾਲ ਇੱਥੇ ਸੰਪਰਕ ਕਰੋ:<br> 
+                <strong><a href="mailto:support@naukriconnect.in" style="color: var(--primary-color);">support@naukriconnect.in</a></strong></p>
+                
+                <p class="lang-en">Have questions? Reach out to us at:<br> 
+                <strong><a href="mailto:support@naukriconnect.in" style="color: var(--primary-color);">support@naukriconnect.in</a></strong></p>
+                
+                <hr style="border: 0
