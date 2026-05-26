@@ -1,70 +1,75 @@
-<div class="card">
-                <h2 class="lang-pa">ਸੰਪਰਕ ਅਤੇ ਫੀਡਬੈਕ</h2>
-                <h2 class="lang-en">Contact & Feedback</h2>
-                
-                <p class="lang-pa">ਕੋਈ ਸਵਾਲ ਹੈ? ਸਾਡੇ ਨਾਲ ਇੱਥੇ ਸੰਪਰਕ ਕਰੋ:<br> 
-                <strong><a href="mailto:support@naukriconnect.in" style="color: var(--primary-color);">support@naukriconnect.in</a></strong></p>
-                
-                <p class="lang-en">Have questions? Reach out to us at:<br> 
-                <strong><a href="mailto:support@naukriconnect.in" style="color: var(--primary-color);">support@naukriconnect.in</a></strong></p>
-            </div>
-        </aside>
-    </div>
+<style>
+    /* Ensure your background image is properly styled and visible */
+    body {
+        /* Replace 'your-image-path.jpg' with your actual image URL or local path */
+        background-image: url('your-image-path.jpg'); 
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+    }
 
-    <script>
-        // --- 1. LANGUAGE SWITCHER FUNCTIONALITY ---
-        function toggleLang(lang) {
-            // Remove lang classes and add the selected one to the body
-            document.body.classList.remove('lang-en', 'lang-pa');
-            document.body.classList.add('lang-' + lang);
+    /* Simple Language Toggle Visibility Rules */
+    body.lang-en .lang-pa { display: none !important; }
+    body.lang-pa .lang-en { display: none !important; }
+</style>
 
-            // Update active states on switcher buttons
-            document.getElementById('btn-pa').classList.remove('active');
-            document.getElementById('btn-en').classList.remove('active');
-            document.getElementById('btn-' + lang).classList.add('active');
-            
-            // Optional: Save preference for return visits
-            localStorage.setItem('preferredLang', lang);
-        }
+<aside class="card admin-section" style="display: none;">
+    <h2 class="lang-pa">ਐਡਮਿਨ ਪੈਨਲ (ਪ੍ਰਾਈਵੇਟ)</h2>
+    <h2 class="lang-en">Admin Panel (Private)</h2>
+    <p class="lang-pa">*ਸਿਰਫ਼ ਵੈੱਬਸਾਈਟ ਦੇ ਮਾਲਕ ਲਈ।</p>
+    <p class="lang-en">*For website owner use only.</p>
+    <button onclick="adminLogin()" class="btn-admin">+ ਨਵੀਂ ਨੌਕਰੀ ਜੋੜੋ</button>
+</aside>
 
-        // Load saved language or default to Punjabi on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('preferredLang') || 'pa';
-            toggleLang(savedLang);
-            
-            // Check if user is logged in as admin to show/hide panel
-            checkAdminStatus();
-        });
+<script>
+    // --- 1. LANGUAGE SWITCHER FUNCTIONALITY ---
+    function toggleLang(lang) {
+        document.body.classList.remove('lang-en', 'lang-pa');
+        document.body.classList.add('lang-' + lang);
 
-
-        // --- 2. ADMIN PANEL ACCESS CONTROL ---
-        function checkAdminStatus() {
-            const isAdmin = localStorage.getItem('isAdminLoggedIn') === 'true';
-            const adminPanel = document.querySelector('.admin-section');
-            
-            if (adminPanel) {
-                // Completely hide the element from the layout if not admin
-                if (isAdmin) {
-                    adminPanel.style.display = 'block';
-                } else {
-                    adminPanel.style.display = 'none';
-                }
-            }
-        }
-
-        function adminLogin() {
-            // Simple prototype password check (Replace with secure authentication later)
-            const password = prompt("Enter Admin Password:");
-            if (password === "admin123") { 
-                alert("Login Successful!");
-                localStorage.setItem('isAdminLoggedIn', 'true');
-                checkAdminStatus();
-            } else {
-                alert("Incorrect password access denied.");
-            }
-        }
+        // Safely check if language toggle buttons exist before editing classes
+        const btnPa = document.getElementById('btn-pa');
+        const btnEn = document.getElementById('btn-en');
         
-        // Call this from your browser console to log out: localStorage.removeItem('isAdminLoggedIn'); checkAdminStatus();
-    </script>
-</body>
-</html>
+        if (btnPa) btnPa.classList.toggle('active', lang === 'pa');
+        if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+        
+        localStorage.setItem('preferredLang', lang);
+    }
+
+    // --- 2. ADMIN PANEL ACCESS CONTROL ---
+    function checkAdminStatus() {
+        const isAdmin = localStorage.getItem('isAdminLoggedIn') === 'true';
+        // Targets the class applied to your admin element container
+        const adminPanel = document.querySelector('.admin-section');
+        
+        if (adminPanel) {
+            if (isAdmin) {
+                adminPanel.style.setProperty('display', 'block', 'important');
+            } else {
+                adminPanel.style.setProperty('display', 'none', 'important');
+            }
+        }
+    }
+
+    function adminLogin() {
+        const password = prompt("Enter Admin Password:");
+        if (password === "admin123") { 
+            alert("Login Successful!");
+            localStorage.setItem('isAdminLoggedIn', 'true');
+            checkAdminStatus();
+        } else {
+            alert("Incorrect password. Access denied.");
+        }
+    }
+
+    // Single source of initialization when the page loads
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('preferredLang') || 'pa';
+        toggleLang(savedLang);
+        checkAdminStatus();
+    });
+</script>
